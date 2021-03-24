@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   googleId: String,
+  posts: String,
 });
 
 userSchema.plugin(passportLocalMongoose); //made userSchema to use passportlocalmongose as plugin
@@ -95,6 +96,33 @@ app.get(
     res.redirect("/secrets");
   }
 );
+app
+  .route("/submit")
+  .get(function (req, res) {
+    if (req.isAuthenticated()) {
+      //check if user is authenticated
+      res.render("submit");
+    } else {
+      res.redirect("/login");
+    }
+  })
+  .post(function (req, res) {
+    const submittedPost = req.body.secret;
+    console.log(req.user.id);
+    User.findById(req.user.id, function (err, foundItem) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (foundItem) {
+          foundItem.posts = submittedPost;
+          foundItem.save(function () {
+            res.redirect("/secrets");
+          });
+        }
+      }
+    });
+  });
+
 app
   .route("/register")
   .get(function (req, res) {
