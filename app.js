@@ -173,12 +173,16 @@ app
   .route("/secrets")
 
   .get(function (req, res) {
-    if (req.isAuthenticated()) {
-      //check if user is authenticated
-      res.render("secrets");
-    } else {
-      res.redirect("/login");
-    }
+    //checks in db for all notnull db
+    User.find({ posts: { $ne: null } }, function (err, foundItem) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (foundItem) {
+          res.render("secrets", { userWithPosts: foundItem });
+        }
+      }
+    });
   });
 
 app
