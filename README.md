@@ -1,2 +1,3 @@
 # authentication_website
-using passport and passport-google-oauth20
+use of passport,passport-local,local-passport-mongoose,express-session  
+and passport-google-oauth20
